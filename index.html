@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>透明百业</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>">
+<style>
+  @font-face{font-family:'Zpix';src:url('https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@master/dist/Zpix.woff2') format('woff2');font-display:swap}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Zpix',monospace;min-height:100vh;-webkit-font-smoothing:none;image-rendering:pixelated;transition:background 0.4s}
+  
+  /* Theme colors via CSS variables */
+  body.theme-sakura{--bg:linear-gradient(160deg,#fff5f9,#fce4f0 30%,#f0e6ff 70%,#e8f4ff);--card:rgba(255,255,255,0.8);--accent:#ff85a2;--accent-dark:#e8527a;--accent-light:#ffccd5;--text:#5a4a5a;--text-light:#9a8a9a;--border:rgba(255,133,162,0.2);--shadow:0 4px 20px rgba(201,160,220,0.15);--green:#a8e6cf;--green-l:#e0f7ee;--gold:#ffd166;--gold-l:#fff3d1;--blue:#8ec5fc;--blue-l:#dceeff;--purple:#c9a0dc;--purple-l:#ede0f5;--brown:#c4956a;--brown-l:#f0e0cf;--dot:🌸}
+  body.theme-bamboo{--bg:linear-gradient(160deg,#e8eef4,#dde8f0 30%,#d0dce8 70%,#e4ecf4);--card:rgba(240,244,250,0.85);--accent:#6888a8;--accent-dark:#4a6a88;--accent-light:#b0c8dc;--text:#3a4454;--text-light:#7888a0;--border:rgba(104,136,168,0.2);--shadow:0 4px 20px rgba(100,130,170,0.12);--green:#7aaa8a;--green-l:#c8e0d0;--gold:#b0a070;--gold-l:#e0dcc0;--blue:#6888a8;--blue-l:#c0d4e4;--purple:#8a80a8;--purple-l:#d0cce0;--brown:#8a8070;--brown-l:#d8d0c4;--dot:🎋}
+  body.theme-sunset{--bg:linear-gradient(160deg,#fff4ee,#ffe8d8 30%,#fce0d0 70%,#f8e8e0);--card:rgba(255,252,248,0.85);--accent:#d48060;--accent-dark:#b06040;--accent-light:#f0c4b0;--text:#5a4440;--text-light:#a08878;--border:rgba(212,128,96,0.2);--shadow:0 4px 20px rgba(200,140,100,0.12);--green:#90b888;--green-l:#d0e4cc;--gold:#d4a850;--gold-l:#f0e4c0;--blue:#80a0b8;--blue-l:#c4d8e4;--purple:#b090a8;--purple-l:#dcd0d8;--brown:#a08868;--brown-l:#e0d4c0;--dot:🌅}
+  body.theme-moon{--bg:linear-gradient(160deg,#1a1a2e,#16213e 30%,#1a1a30 70%,#0f1020);--card:rgba(30,35,60,0.85);--accent:#c9a0dc;--accent-dark:#a880c0;--accent-light:#3a3060;--text:#c8c0d8;--text-light:#7870a0;--border:rgba(160,130,200,0.2);--shadow:0 4px 20px rgba(80,60,120,0.2);--green:#70a880;--green-l:#203828;--gold:#c0a860;--gold-l:#383020;--blue:#7090b8;--blue-l:#202838;--purple:#a080c0;--purple-l:#302840;--brown:#a09070;--brown-l:#383028;--dot:🌙}
+
+  .bg-main{min-height:100vh;background:var(--bg);position:relative;overflow:hidden;transition:all 0.4s}
+  .container{max-width:440px;margin:0 auto;padding:16px;position:relative;z-index:1}
+  .card{background:var(--card);backdrop-filter:blur(12px);border-radius:16px;border:2px solid var(--border);box-shadow:var(--shadow);padding:20px;margin-bottom:14px;transition:all 0.4s}
+  .btn{font-family:'Zpix',monospace;padding:10px 24px;border:3px solid;border-radius:8px;cursor:pointer;font-size:16px;color:#fff;box-shadow:3px 3px 0 rgba(0,0,0,0.1);transition:all 0.1s}
+  .btn:active{transform:translate(2px,2px);box-shadow:none}
+  .btn-accent{background:var(--accent);border-color:var(--accent-dark)}
+  .btn-purple{background:var(--purple);border-color:var(--purple)}
+  .btn-small{padding:6px 14px;font-size:14px}
+  .btn-gray{background:var(--text-light);border-color:var(--text-light);color:#fff}
+  input{font-family:'Zpix',monospace;width:100%;padding:12px 16px;background:var(--card);border:2px solid var(--border);border-radius:10px;outline:none;text-align:center;font-size:16px;color:var(--text);transition:all 0.4s}
+  input:focus{border-color:var(--accent)}
+  input::placeholder{color:var(--text-light)}
+  .module-card{background:var(--card);backdrop-filter:blur(10px);border-radius:16px;border:2px solid var(--border);box-shadow:var(--shadow);padding:18px 12px;text-align:center;cursor:pointer;transition:all 0.2s}
+  .module-card:hover{transform:translateY(-3px)}
+  .checkin-box{border:2px solid var(--border);border-radius:12px;padding:14px 6px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--card)}
+  .cal-cell{min-height:40px;padding:2px;text-align:center;border-radius:8px}
+  .cal-today{background:var(--accent-light);border:2px solid var(--accent)!important}
+  .lb-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:2px;border-radius:8px}
+  .lb-tag{font-size:12px;padding:1px 5px;border-radius:6px}
+  /* Theme switcher */
+  .theme-bar{position:fixed;bottom:16px;right:16px;display:flex;gap:6px;z-index:99;background:var(--card);backdrop-filter:blur(10px);padding:6px 10px;border-radius:20px;border:2px solid var(--border);box-shadow:var(--shadow)}
+  .theme-dot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid var(--border);transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .theme-dot:hover{transform:scale(1.2)}
+  .theme-dot.active{border-color:var(--accent);box-shadow:0 0 8px var(--accent)}
+  @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .slide-up{animation:slideUp 0.4s ease}
+</style>
+</head>
+<body class="theme-sakura">
+<div id="app"></div>
+<div class="theme-bar" id="themeBar">
+  <div class="theme-dot active" onclick="setTheme('sakura')" title="樱花" style="background:#ffccd5">🌸</div>
+  <div class="theme-dot" onclick="setTheme('bamboo')" title="竹林" style="background:#b0c8dc">🎋</div>
+  <div class="theme-dot" onclick="setTheme('sunset')" title="暮色" style="background:#f0c4b0">🌅</div>
+  <div class="theme-dot" onclick="setTheme('moon')" title="月夜" style="background:#2a2848">🌙</div>
+</div>
+<script>
+function setTheme(t){
+  document.body.className='theme-'+t;
+  localStorage.setItem('ts_theme',t);
+  document.querySelectorAll('.theme-dot').forEach(function(d){d.classList.remove('active')});
+  document.querySelector('[onclick="setTheme(\''+t+'\')"]').classList.add('active');
+}
+(function(){var t=localStorage.getItem('ts_theme');if(t)setTheme(t)})();
+
+const SUPA='https://egofocgewwjzlbuzagkr.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnb2ZvY2dld3dqemxidXphZ2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzUyMDQsImV4cCI6MjA5Mjk1MTIwNH0.Itv47onf9AafGRTWwLYLspPQxPJr-_3UxjfWRyOroNE';
+const H={'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY};
+async function api(p,o={}){const r=await fetch(SUPA+'/rest/v1/'+p,{headers:{...H,...(o.headers||{})},...o});if(!r.ok)throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null}
+let U=JSON.parse(localStorage.getItem('ts_user')||'null');
+let P=U?'menu':'login';
+
+function render(){
+  var a=document.getElementById('app');
+  if(P==='login')a.innerHTML=loginHTML();
+  else if(P==='menu')a.innerHTML=menuHTML();
+  else if(P==='checkin'){a.innerHTML=checkinHTML();loadCheckin()}
+  else if(P==='food'){a.innerHTML=foodHTML();loadFoods()}
+  else if(P==='raid'){a.innerHTML=raidHTML();loadRaids()}
+}
+
+function loginHTML(){
+  return '<div class="bg-main" style="display:flex;align-items:center;justify-content:center;padding:20px">'+
+    '<div class="card slide-up" style="max-width:340px;width:100%;text-align:center;padding:32px 24px;border-color:var(--accent-light)">'+
+      '<div style="font-size:28px;margin-bottom:6px">🫧</div>'+
+      '<h1 style="font-size:22px;color:var(--accent-dark);margin-bottom:4px">透明百业</h1>'+
+      '<div style="font-size:12px;color:var(--text-light);margin-bottom:24px;letter-spacing:3px">TRANSPARENT STUDIO</div>'+
+      '<input id="ni" placeholder="◇ 输入昵称 ◇" maxlength="20" onkeydown="if(event.key===\'Enter\')doLogin()">'+
+      '<div style="margin-top:20px"><button class="btn btn-accent" onclick="doLogin()">❀ 进入主页 ❀</button></div>'+
+      '<div id="le" style="font-size:12px;color:var(--accent-dark);margin-top:10px"></div>'+
+      '<div style="font-size:11px;color:var(--text-light);margin-top:16px">◇ 第一次输入自动注册 ◇</div>'+
+    '</div></div>';
+}
+
+async function doLogin(){
+  var n=document.getElementById('ni').value.trim();if(!n)return;
+  try{
+    var u=await api('users?nickname=eq.'+encodeURIComponent(n)+'&select=*');
+    if(u.length===0){await api('users',{method:'POST',headers:{...H,Prefer:'return=representation'},body:JSON.stringify({nickname:n})});u=await api('users?nickname=eq.'+encodeURIComponent(n)+'&select=*')}
+    if(u.length>0){U=u[0];localStorage.setItem('ts_user',JSON.stringify(U));P='menu';render()}
+  }catch(e){document.getElementById('le').textContent='登录失败了 >_< '+e.message}
+}
+
+function menuHTML(){
+  var ms=[
+    {id:'checkin',ic:'📅',nm:'每日打卡',ds:'一起健康生活',cl:'var(--green)',bl:'var(--green-l)'},
+    {id:'food',ic:'🎰',nm:'今天吃什么',ds:'食物扭蛋机',cl:'var(--gold)',bl:'var(--gold-l)'},
+    {id:'raid',ic:'⚔️',nm:'双十报名',ds:'副本集结号',cl:'var(--blue)',bl:'var(--blue-l)'},
+    {id:'more',ic:'✨',nm:'敬请期待',ds:'更多功能~',cl:'var(--purple)',bl:'var(--purple-l)'},
+  ];
+  return '<div class="bg-main"><div class="container slide-up">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-top:10px">'+
+      '<div><div style="font-size:16px;color:var(--accent-dark)">透明百业 ✿</div>'+
+      '<div style="font-size:14px;color:var(--text-light);margin-top:4px">欢迎~ <span style="color:var(--accent)">'+U.nickname+'</span> ♡</div></div>'+
+      '<button class="btn btn-purple btn-small" onclick="doLogout()">登出</button></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+    ms.map(function(m){return '<div class="module-card" style="border-color:'+m.bl+';'+(m.id==='more'?'opacity:0.45;cursor:default':'')+'" onclick="'+(m.id!=='more'?"go('"+m.id+"')":'')+'">'+
+      '<div style="width:44px;height:44px;border-radius:12px;background:'+m.bl+';display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:22px">'+m.ic+'</div>'+
+      '<div style="font-size:14px;color:'+m.cl+';margin-bottom:3px">'+m.nm+'</div>'+
+      '<div style="font-size:11px;color:var(--text-light)">'+m.ds+'</div></div>'}).join('')+
+    '</div>'+
+    '<div style="text-align:center;margin-top:28px"><button class="btn btn-gray btn-small" onclick="doDelete()">删除账号</button></div>'+
+  '</div></div>';
+}
+
+function go(p){P=p;render()}
+function doLogout(){localStorage.removeItem('ts_user');U=null;P='login';render()}
+async function doDelete(){
+  if(!confirm('确定删除「'+U.nickname+'」吗？'))return;
+  try{await api('checkins?user_id=eq.'+U.id,{method:'DELETE'});await api('raid_signups?user_id=eq.'+U.id,{method:'DELETE'});await api('users?id=eq.'+U.id,{method:'DELETE'})}catch(e){}
+  doLogout();
+}
+
+function checkinHTML(){
+  var td=new Date().toISOString().slice(0,10);
+  return '<div class="bg-main"><div class="container slide-up">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:8px">'+
+      '<button class="btn btn-purple btn-small" onclick="go(\'menu\')">← 返回</button>'+
+      '<span style="font-size:16px;color:var(--green)">📅 每日打卡</span></div>'+
+    '<div class="card" style="border-color:var(--green-l)">'+
+      '<div style="text-align:center;margin-bottom:12px;font-size:14px;color:var(--text-light)">◇ '+td+' ◇</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="cg"><div style="text-align:center;padding:16px;color:var(--text-light)">加载中...</div></div></div>'+
+    '<div class="card" id="cal" style="border-color:var(--purple-l)"></div>'+
+    '<div class="card" id="lb" style="border-color:var(--gold-l)"></div>'+
+  '</div></div>';
+}
+
+async function loadCheckin(){
+  var td=new Date().toISOString().slice(0,10),hr=new Date().getHours();
+  try{
+    var my=await api('checkins?user_id=eq.'+U.id+'&select=*&order=date.desc')||[];
+    var tm=my.filter(function(c){return c.date===td});
+    var he=tm.some(function(c){return c.type==='early'});
+    var hs=tm.some(function(c){return c.type==='sleep'});
+    var pp=tm.filter(function(c){return c.type==='poop'}).length;
+    document.getElementById('cg').innerHTML=
+      '<div class="checkin-box" style="'+(he?'background:var(--gold-l);border-color:var(--gold)':'')+';'+(hr>=8&&!he?'opacity:0.3':'')+'" onclick="'+(hr<8&&!he?"ck('early')":"")+'"><div style="font-size:26px">'+(he?'✅':'🌅')+'</div><div style="font-size:14px;margin-top:3px;color:'+(he?'var(--gold)':'var(--text)')+'">'+(he?'已打卡✓':(hr>=8?'过时了~':'早起'))+'</div><div style="font-size:11px;color:var(--text-light)">8:00前</div></div>'+
+      '<div class="checkin-box" style="'+(hs?'background:var(--blue-l);border-color:var(--blue)':'')+'" onclick="'+(!hs?"ck('sleep')":"")+'"><div style="font-size:26px">'+(hs?'✅':'🌙')+'</div><div style="font-size:14px;margin-top:3px;color:'+(hs?'var(--blue)':'var(--text)')+'">'+(hs?'已打卡✓':'晚睡')+'</div><div style="font-size:11px;color:var(--text-light)">0:00后</div></div>'+
+      '<div class="checkin-box" style="'+(pp>0?'background:var(--brown-l);border-color:var(--brown)':'')+'" onclick="ck(\'poop\')"><div style="font-size:26px">💩</div><div style="font-size:14px;margin-top:3px;color:'+(pp>0?'var(--brown)':'var(--text)')+'">'+(pp>0?'×'+pp:'记录')+'</div><div style="font-size:11px;color:var(--text-light)">不限次数</div></div>';
+    renderCal(my);
+    var d=new Date();d.setDate(d.getDate()-((d.getDay()||7)-1));var ws=d.toISOString().slice(0,10);
+    var all=await api('checkins?date=gte.'+ws+'&select=user_id,type,users!inner(nickname)&order=created_at.desc')||[];
+    var lb={};all.forEach(function(c){var n=c.users?c.users.nickname:'?';if(!lb[n])lb[n]={early:0,sleep:0,poop:0};lb[n][c.type]++});
+    var s=Object.entries(lb).map(function(e){return{nick:e[0],e:e[1].early,s:e[1].sleep,p:e[1].poop,t:e[1].early+e[1].sleep+e[1].poop}}).sort(function(a,b){return b.t-a.t});
+    var md=['🥇','🥈','🥉'];
+    document.getElementById('lb').innerHTML='<div style="text-align:center;margin-bottom:10px;font-size:16px;color:var(--accent-dark)">🏆 本周排行</div>'+
+      (s.length===0?'<div style="text-align:center;padding:8px;font-size:13px;color:var(--text-light)">还没有人打卡哦~</div>':
+      s.slice(0,10).map(function(x,i){return '<div class="lb-row" style="background:'+(i===0?'var(--gold-l)':(x.nick===U.nickname?'var(--accent-light)':'transparent'))+'"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:13px">'+(i<3?md[i]:'<span style="color:var(--text-light)">'+(i+1)+'</span>')+'</span><span style="font-size:15px;color:'+(x.nick===U.nickname?'var(--accent-dark)':'var(--text)')+'">'+x.nick+'</span></div><div style="display:flex;gap:3px;align-items:center">'+(x.e>0?'<span class="lb-tag" style="color:var(--gold);background:var(--gold-l)">🌅'+x.e+'</span>':'')+(x.s>0?'<span class="lb-tag" style="color:var(--blue);background:var(--blue-l)">🌙'+x.s+'</span>':'')+(x.p>0?'<span class="lb-tag" style="color:var(--brown);background:var(--brown-l)">💩'+x.p+'</span>':'')+'<span class="lb-tag" style="color:var(--accent-dark);background:var(--accent-light)">'+x.t+'</span></div></div>'}).join(''));
+  }catch(e){console.error(e)}
+}
+
+function renderCal(ck){
+  var nw=new Date(),y=window._cy||nw.getFullYear(),m=window._cm!==undefined?window._cm:nw.getMonth();
+  window._cy=y;window._cm=m;
+  var td=nw.toISOString().slice(0,10),f=new Date(y,m,1).getDay(),ds=new Date(y,m+1,0).getDate();
+  var cs=[];for(var i=0;i<f;i++)cs.push('');for(var i=1;i<=ds;i++)cs.push(i);
+  var wd=['日','一','二','三','四','五','六'];var ic={early:'🌅',sleep:'🌙',poop:'💩'};
+  document.getElementById('cal').innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+    '<span style="font-size:18px;color:var(--accent);cursor:pointer;padding:2px 8px" onclick="cM(-1)">◂</span>'+
+    '<span style="font-size:14px;color:var(--text)">'+y+'年'+(m+1)+'月</span>'+
+    '<span style="font-size:18px;color:var(--accent);cursor:pointer;padding:2px 8px" onclick="cM(1)">▸</span></div>'+
+    '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px">'+
+    wd.map(function(d){return '<div style="text-align:center;padding:2px;font-size:12px;color:var(--text-light)">'+d+'</div>'}).join('')+
+    cs.map(function(day){if(!day)return '<div class="cal-cell"></div>';
+      var ds2=y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      var dc=ck.filter(function(c){return c.date===ds2});var it=ds2===td;
+      return '<div class="cal-cell '+(it?'cal-today':'')+'"><div style="font-size:12px;color:'+(it?'var(--accent-dark)':'var(--text)')+'">'+day+'</div><div style="font-size:8px;line-height:1">'+dc.map(function(c){return ic[c.type]}).join('')+'</div></div>'
+    }).join('')+'</div>';
+}
+function cM(d){var y=window._cy,m=window._cm+d;if(m<0){m=11;y--}if(m>11){m=0;y++}window._cy=y;window._cm=m;api('checkins?user_id=eq.'+U.id+'&select=*&order=date.desc').then(function(r){renderCal(r||[])})}
+async function ck(t){var td=new Date().toISOString().slice(0,10);try{await api('checkins',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({user_id:U.id,type:t,date:td})});loadCheckin()}catch(e){alert('打卡失败 >_< '+e.message)}}
+
+function phHTML(ic,t){
+  return '<div class="bg-main" style="display:flex;align-items:center;justify-content:center;min-height:100vh">'+
+    '<div style="text-align:center;z-index:1" class="slide-up">'+
+    '<div style="font-size:44px;margin-bottom:10px">'+ic+'</div>'+
+    '<div style="font-size:18px;color:var(--accent)">'+t+'</div>'+
+    '<div style="font-size:13px;color:var(--text-light);margin-top:8px">即将上线~ 敬请期待 ♡</div>'+
+    '<div style="margin-top:20px"><button class="btn btn-purple btn-small" onclick="go(\'menu\')">← 返回</button></div></div></div>';
+}
+
+
+
+// ===== FOOD GACHA =====
+function foodHTML(){
+  return '<div class="bg-main"><div class="container slide-up">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:8px">'+
+      '<button class="btn btn-purple btn-small" onclick="go(\'menu\')">← 返回</button>'+
+      '<span style="font-size:16px;color:var(--gold)">🎰 食物扭蛋机</span></div>'+
+    '<div class="card" style="border-color:var(--gold-l);text-align:center">'+
+      '<div style="font-size:13px;color:var(--text-light);margin-bottom:10px">选择标签筛选（最多3个）</div>'+
+      '<div id="tagArea" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px">加载中...</div>'+
+      '<div style="font-size:11px;color:var(--text-light);margin-bottom:16px">已选: <span id="tagCount">0</span>/3</div>'+
+    '</div>'+
+    '<div class="card" style="border-color:var(--gold-l);text-align:center;padding:28px 20px">'+
+      '<div id="gachaDisplay" style="margin-bottom:20px">'+
+        '<div style="font-size:60px" id="gachaIcon">🎰</div>'+
+        '<div style="font-size:14px;color:var(--text-light);margin-top:8px" id="gachaText">点击下方按钮开始抽签~</div>'+
+      '</div>'+
+      '<button class="btn btn-accent" onclick="spinGacha()" id="spinBtn" style="font-size:18px;padding:12px 36px">🎲 扭一下！</button>'+
+    '</div>'+
+    '<div class="card" style="border-color:var(--purple-l)">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<span style="font-size:14px;color:var(--purple)">📋 食物库</span>'+
+        '<button class="btn btn-accent btn-small" onclick="showAddFood()">+ 添加</button>'+
+      '</div>'+
+      '<div id="foodList" style="max-height:200px;overflow-y:auto;font-size:12px;color:var(--text-light)">加载中...</div>'+
+    '</div>'+
+    '<div id="addFoodModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:99;display:none;align-items:center;justify-content:center">'+
+      '<div class="card" style="max-width:320px;width:90%;margin:auto;text-align:center">'+
+        '<div style="font-size:14px;color:var(--accent-dark);margin-bottom:12px">添加新食物</div>'+
+        '<input id="newFoodName" placeholder="食物名称" style="margin-bottom:8px">'+
+        '<input id="newFoodTags" placeholder="标签，用逗号分隔（如：米饭,辣,川味）" style="margin-bottom:12px;font-size:13px">'+
+        '<div style="display:flex;gap:8px;justify-content:center">'+
+          '<button class="btn btn-accent btn-small" onclick="addFood()">添加</button>'+
+          '<button class="btn btn-gray btn-small" onclick="hideAddFood()">取消</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+  '</div></div>';
+}
+
+var allFoods=[];
+var selectedTags=[];
+var allTags=[];
+var isSpinning=false;
+
+async function loadFoods(){
+  try{
+    allFoods=await api('foods?select=*&order=name.asc')||[];
+    var tagSet={};
+    allFoods.forEach(function(f){(f.tags||[]).forEach(function(t){tagSet[t]=(tagSet[t]||0)+1})});
+    allTags=Object.entries(tagSet).sort(function(a,b){return b[1]-a[1]}).map(function(e){return e[0]});
+    renderTags();
+    renderFoodList();
+  }catch(e){console.error(e)}
+}
+
+function renderTags(){
+  var el=document.getElementById('tagArea');
+  if(!el)return;
+  el.innerHTML=allTags.map(function(t){
+    var sel=selectedTags.indexOf(t)>=0;
+    return '<span onclick="toggleTag(\''+t.replace(/'/g,"\\'")+'\')\" style="padding:4px 10px;border-radius:16px;font-size:12px;cursor:pointer;transition:all 0.2s;'+
+      (sel?'background:var(--accent);color:#fff;border:2px solid var(--accent)':'background:var(--card);color:var(--text-light);border:2px solid var(--border)')+
+      '">'+t+'</span>';
+  }).join('');
+}
+
+function toggleTag(t){
+  var idx=selectedTags.indexOf(t);
+  if(idx>=0){selectedTags.splice(idx,1)}
+  else if(selectedTags.length<3){selectedTags.push(t)}
+  renderTags();
+  var c=document.getElementById('tagCount');
+  if(c)c.textContent=selectedTags.length;
+}
+
+function getFilteredFoods(){
+  if(selectedTags.length===0)return allFoods;
+  // OR logic: match any tag, weighted by match count
+  var scored=allFoods.map(function(f){
+    var matchCount=selectedTags.filter(function(t){return (f.tags||[]).indexOf(t)>=0}).length;
+    return {food:f,score:matchCount};
+  }).filter(function(x){return x.score>0});
+  scored.sort(function(a,b){return b.score-a.score});
+  // Build weighted pool: foods with more matches appear more often
+  var pool=[];
+  scored.forEach(function(x){
+    var weight=x.score*x.score; // quadratic weight
+    for(var i=0;i<weight;i++) pool.push(x.food);
+  });
+  return pool.length>0?pool:allFoods;
+}
+
+async function spinGacha(){
+  if(isSpinning)return;
+  var pool=getFilteredFoods();
+  if(pool.length===0){
+    document.getElementById('gachaIcon').textContent='😢';
+    document.getElementById('gachaText').textContent='没有符合条件的食物...换个标签试试？';
+    return;
+  }
+  isSpinning=true;
+  var btn=document.getElementById('spinBtn');
+  btn.disabled=true;
+  btn.textContent='抽签中...';
+  var icon=document.getElementById('gachaIcon');
+  var text=document.getElementById('gachaText');
+  var emojis=['🍜','🍛','🍝','🍲','🍱','🍙','🍚','🥟','🍕','🌮','🍔','🥗','🍣','🍤','🥘'];
+  var count=0;
+  var interval=setInterval(function(){
+    icon.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    icon.style.transform='rotate('+(Math.random()*30-15)+'deg) scale('+(0.9+Math.random()*0.3)+')';
+    text.textContent='转啊转~';
+    count++;
+    if(count>15){
+      clearInterval(interval);
+      var pick=pool[Math.floor(Math.random()*pool.length)];
+      icon.style.transform='scale(1.3)';
+      icon.textContent='🎉';
+      text.innerHTML='<div style="font-size:22px;color:var(--accent-dark);margin:8px 0">'+pick.name+'</div>'+
+        '<div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap">'+
+        (pick.tags||[]).map(function(t){return '<span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--gold-l);color:var(--gold)">'+t+'</span>'}).join('')+
+        '</div>';
+      setTimeout(function(){
+        icon.style.transform='scale(1)';
+        isSpinning=false;
+        btn.disabled=false;
+        btn.textContent='🎲 再来一次！';
+      },600);
+    }
+  },80);
+}
+
+function renderFoodList(){
+  var el=document.getElementById('foodList');
+  if(!el)return;
+  if(allFoods.length===0){el.innerHTML='还没有食物哦~';return}
+  el.innerHTML=allFoods.map(function(f){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)">'+
+      '<span style="color:var(--text)">'+f.name+'</span>'+
+      '<span style="display:flex;gap:3px">'+
+      (f.tags||[]).map(function(t){return '<span style="font-size:10px;padding:1px 4px;border-radius:4px;background:var(--gold-l);color:var(--gold)">'+t+'</span>'}).join('')+
+      '</span></div>';
+  }).join('');
+}
+
+function showAddFood(){
+  var m=document.getElementById('addFoodModal');
+  m.style.display='flex';
+}
+function hideAddFood(){
+  var m=document.getElementById('addFoodModal');
+  m.style.display='none';
+}
+
+async function addFood(){
+  var name=document.getElementById('newFoodName').value.trim();
+  var tagsStr=document.getElementById('newFoodTags').value.trim();
+  if(!name){alert('请输入食物名称');return}
+  var tags=tagsStr?tagsStr.split(/[,，]/).map(function(t){return t.trim()}).filter(function(t){return t}):[];
+  try{
+    await api('foods',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({name:name,tags:tags,created_by:U?U.id:null})});
+    hideAddFood();
+    document.getElementById('newFoodName').value='';
+    document.getElementById('newFoodTags').value='';
+    await loadFoods();
+  }catch(e){alert('添加失败 >_< '+e.message)}
+}
+
+
+// ===== RAID SIGNUP =====
+var RAID_PWD='123456';
+var raidSessions=[];
+
+function raidHTML(){
+  return '<div class="bg-main"><div class="container slide-up">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:8px">'+
+      '<button class="btn btn-purple btn-small" onclick="go(\'menu\')">← 返回</button>'+
+      '<span style="font-size:16px;color:var(--blue)">⚔️ 双十报名</span></div>'+
+    '<div class="card" style="border-color:var(--blue-l);text-align:center">'+
+      '<button class="btn btn-accent" onclick="showCreateRaid()">+ 创建新场次</button>'+
+    '</div>'+
+    '<div id="raidList">加载中...</div>'+
+    '<div id="raidModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:99;align-items:center;justify-content:center">'+
+      '<div class="card" style="max-width:320px;width:90%;margin:auto;text-align:center">'+
+        '<div style="font-size:14px;color:var(--accent-dark);margin-bottom:12px">创建副本场次</div><style>#raidModal .card{overflow:hidden}#raidModal input{box-sizing:border-box;width:100%!important;max-width:100%!important}</style>'+
+        '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px">需要管理员密码</div>'+
+        '<input id="raidPwd" type="password" placeholder="管理员密码" style="margin-bottom:8px">'+
+        '<input id="raidDate" type="date" style="margin-bottom:8px;width:100%;max-width:100%;box-sizing:border-box;-webkit-appearance:none">'+
+        '<input id="raidTime" placeholder="时间（如 20:30）" style="margin-bottom:12px">'+
+        '<div style="display:flex;gap:8px;justify-content:center">'+
+          '<button class="btn btn-accent btn-small" onclick="createRaid()">创建</button>'+
+          '<button class="btn btn-gray btn-small" onclick="hideRaidModal()">取消</button>'+
+        '</div>'+
+        '<div id="raidError" style="font-size:12px;color:var(--accent-dark);margin-top:8px"></div>'+
+      '</div>'+
+    '</div>'+
+    '<div id="deleteRaidModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:99;align-items:center;justify-content:center">'+
+      '<div class="card" style="max-width:320px;width:90%;margin:auto;text-align:center">'+
+        '<div style="font-size:14px;color:var(--accent-dark);margin-bottom:12px">删除场次</div>'+
+        '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px">需要管理员密码</div>'+
+        '<input id="deletePwd" type="password" placeholder="管理员密码" style="margin-bottom:12px">'+
+        '<div style="display:flex;gap:8px;justify-content:center">'+
+          '<button class="btn btn-accent btn-small" onclick="confirmDeleteRaid()">确认删除</button>'+
+          '<button class="btn btn-gray btn-small" onclick="hideDeleteRaidModal()">取消</button>'+
+        '</div>'+
+        '<div id="deleteError" style="font-size:12px;color:var(--accent-dark);margin-top:8px"></div>'+
+      '</div>'+
+    '</div>'+
+  '</div></div>';
+}
+
+function showCreateRaid(){
+  var m=document.getElementById('raidModal');
+  m.style.display='flex';m.style.alignItems='center';m.style.justifyContent='center';
+  // Default date to today
+  var today=new Date().toISOString().slice(0,10);
+  document.getElementById('raidDate').value=today;
+  document.getElementById('raidPwd').value='';
+  document.getElementById('raidTime').value='';
+  document.getElementById('raidError').textContent='';
+}
+function hideRaidModal(){document.getElementById('raidModal').style.display='none'}
+
+var pendingDeleteId='';
+function showDeleteRaid(sessionId){
+  pendingDeleteId=sessionId;
+  var m=document.getElementById('deleteRaidModal');
+  m.style.display='flex';
+  document.getElementById('deletePwd').value='';
+  document.getElementById('deleteError').textContent='';
+}
+function hideDeleteRaidModal(){document.getElementById('deleteRaidModal').style.display='none';pendingDeleteId=''}
+
+async function createRaid(){
+  var pwd=document.getElementById('raidPwd').value;
+  if(pwd!==RAID_PWD){document.getElementById('raidError').textContent='密码错误 >_<';return}
+  var date=document.getElementById('raidDate').value;
+  var time=document.getElementById('raidTime').value.trim();
+  if(!date||!time){document.getElementById('raidError').textContent='请填写日期和时间';return}
+  try{
+    await api('raid_sessions',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({date:date,time_slot:time,created_by:U?U.id:null})});
+    hideRaidModal();
+    await loadRaids();
+  }catch(e){document.getElementById('raidError').textContent='创建失败 >_< '+e.message}
+}
+
+async function confirmDeleteRaid(){
+  var pwd=document.getElementById('deletePwd').value;
+  if(pwd!==RAID_PWD){document.getElementById('deleteError').textContent='密码错误 >_<';return}
+  if(!pendingDeleteId)return;
+  try{
+    await api('raid_signups?session_id=eq.'+pendingDeleteId,{method:'DELETE'});
+    await api('raid_sessions?id=eq.'+pendingDeleteId,{method:'DELETE'});
+    hideDeleteRaidModal();
+    await loadRaids();
+  }catch(e){document.getElementById('deleteError').textContent='删除失败 >_<'}
+}
+
+async function loadRaids(){
+  try{
+    raidSessions=await api('raid_sessions?select=*,raid_signups(slot_number,users(nickname))&order=date.desc,time_slot.asc')||[];
+    renderRaids();
+  }catch(e){
+    console.error(e);
+    var el=document.getElementById('raidList');
+    if(el)el.innerHTML='<div class="card" style="text-align:center;color:var(--accent-dark);font-size:13px">加载失败: '+e.message+'</div>';
+  }
+}
+
+function renderRaids(){
+  var el=document.getElementById('raidList');
+  if(!el)return;
+  if(raidSessions.length===0){
+    el.innerHTML='<div class="card" style="text-align:center;color:var(--text-light);font-size:14px">还没有副本场次哦~ 管理员可以创建</div>';
+    return;
+  }
+  el.innerHTML=raidSessions.map(function(s){
+    var signups=s.raid_signups||[];
+    var commanderSignup=signups.find(function(su){return su.slot_number===0});
+    var slots=[];
+    for(var i=1;i<=9;i++){
+      var su=signups.find(function(x){return x.slot_number===i});
+      slots.push(su);
+    }
+    var mySignup=signups.find(function(su){return su.users&&su.users.nickname===U.nickname});
+    var weekday=['日','一','二','三','四','五','六'][new Date(s.date+'T00:00:00').getDay()];
+
+    return '<div class="card" style="border-color:var(--blue-l);margin-bottom:14px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+        '<div>'+
+          '<span style="font-size:16px;color:var(--accent-dark)">'+s.date+' ('+weekday+')</span>'+
+          '<span style="font-size:15px;color:var(--blue);margin-left:8px">'+s.time_slot+'</span>'+
+        '</div>'+
+        '<span style="font-size:11px;color:var(--text-light);cursor:pointer;text-decoration:underline" onclick="showDeleteRaid(\''+s.id+'\')">删除</span>'+
+      '</div>'+
+      // Commander slot
+      '<div style="margin-bottom:10px;padding:8px 12px;border-radius:8px;background:var(--gold-l);border:2px solid var(--gold);display:flex;justify-content:space-between;align-items:center">'+
+        '<div><span style="font-size:12px;color:var(--gold)">⭐ 指挥</span></div>'+
+        '<div>'+(commanderSignup?
+          '<span style="font-size:14px;color:var(--text)">'+commanderSignup.users.nickname+
+            (commanderSignup.users.nickname===U.nickname?' <span style="font-size:11px;color:var(--accent);cursor:pointer" onclick="leaveRaid(\''+s.id+'\')">[退出]</span>':'')+
+          '</span>':
+          '<span style="font-size:12px;color:var(--text-light);cursor:pointer" onclick="showCommanderJoin(\''+s.id+'\')">点击报名</span>')+
+        '</div>'+
+      '</div>'+
+      // Member slots
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'+
+      slots.map(function(su,idx){
+        var slotNum=idx+1;
+        return '<div style="padding:8px;border-radius:8px;background:var(--card);border:2px solid '+(su?'var(--green)':'var(--border)')+';text-align:center;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+          '<div style="font-size:10px;color:var(--text-light);margin-bottom:2px">'+slotNum+'号位</div>'+
+          (su?
+            '<div style="font-size:13px;color:var(--text)">'+su.users.nickname+
+              (su.users.nickname===U.nickname?' <div style="font-size:10px;color:var(--accent);cursor:pointer;margin-top:2px" onclick="leaveRaid(\''+s.id+'\')">[退出]</div>':'')+
+            '</div>':
+            '<div style="font-size:11px;color:var(--text-light);cursor:pointer" onclick="joinRaid(\''+s.id+'\','+slotNum+')">空位</div>')+
+        '</div>';
+      }).join('')+
+      '</div>'+
+      '<div style="text-align:right;margin-top:8px;font-size:11px;color:var(--text-light)">'+(signups.length)+'/10 已报名</div>'+
+    '</div>';
+  }).join('');
+}
+
+async function joinRaid(sessionId,slotNum){
+  try{
+    await api('raid_signups',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({session_id:sessionId,user_id:U.id,slot_number:slotNum})});
+    await loadRaids();
+  }catch(e){alert('报名失败 >_< 该位置可能已被占用')}
+}
+
+async function leaveRaid(sessionId){
+  if(!confirm('确定退出这场副本吗？'))return;
+  try{
+    await api('raid_signups?session_id=eq.'+sessionId+'&user_id=eq.'+U.id,{method:'DELETE'});
+    await loadRaids();
+  }catch(e){alert('退出失败 >_<')}
+}
+
+
+var pendingCommanderSessionId='';
+function showCommanderJoin(sessionId){
+  pendingCommanderSessionId=sessionId;
+  var pwd=prompt('指挥报名需要管理员密码：');
+  if(pwd===null)return;
+  if(pwd!==RAID_PWD){alert('密码错误 >_<');return}
+  joinRaid(sessionId,0);
+}
+
+render();
+
+</script>
+</body>
+</html>
