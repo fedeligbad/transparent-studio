@@ -7,15 +7,20 @@
 
 ## 📸 预览
 
-| 登录 | 主页 | 打卡 |
-|:---:|:---:|:---:|
-| 昵称登录，自动注册 | 四大功能模块 | 日历视图 + 排行榜 |
+### 🌸🎋🌅🌙 四主题登录页
+<img src="screenshots/login.JPG" width="600">
 
-| 食物扭蛋机 | 双十报名 | 四主题 |
-|:---:|:---:|:---:|
-| 167+ 食物 tag 筛选 | 指挥位 + 9 人报名 | 🌸🎋🌅🌙 |
+### 🏠 主页
+<img src="screenshots/home.JPG" width="600">
 
-> 📱 移动端优先设计，桌面端同样适配
+### 🎰 食物扭蛋机
+<img src="screenshots/food.JPG" width="600">
+
+### ⚔️ 双十报名
+<img src="screenshots/raid.JPG" width="600">
+
+### 📅 每日打卡
+<img src="screenshots/checkin.JPG" width="600">
 
 ## ✨ 功能
 
