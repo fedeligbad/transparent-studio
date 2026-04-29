@@ -1,47 +1,78 @@
-# 🫧 透明百业 · Transparent Studio
+# 🫧 百业工坊 · Guild Studio
 
-燕云十六声游戏百业社团 Web App
+给你的游戏社团搭一个专属 Web App — 一键部署，开箱即用。
+
+> 最初为燕云十六声「透明」百业打造，现已开源为通用社团工具。
 
 ## ✨ 功能
 
 - **登录系统** — 昵称登录，自动注册，无需密码
 - **四主题换色** — 🌸樱花 / 🎋竹林 / 🌅暮色 / 🌙月夜
 - **每日打卡** — 早起·晚睡·💩，日历展示，本周排行榜
-- **食物扭蛋机** — 167+种食物，tag加权随机筛选，用户可添加
-- **双十报名** — 副本场次管理，指挥位+9人自助报名，管理员密码保护
+- **食物扭蛋机** — tag加权随机筛选，成员可自由添加食物
+- **副本报名** — 场次管理，指挥位+9人自助报名，管理员密码保护
+
+## 🚀 快速部署
+
+### 1. 创建 Supabase 项目
+
+前往 [supabase.com](https://supabase.com) 创建免费项目，在 SQL Editor 中执行 `schema.sql` 创建所有表。
+
+### 2. 配置
+
+打开 `index.html`，修改顶部的配置区域：
+
+```javascript
+const CONFIG = {
+  name: '你的百业名',          // 社团名称
+  subtitle: 'YOUR STUDIO',   // 英文副标题
+  icon: '🫧',                // 标签页图标
+  adminPassword: '123456',   // 管理员密码
+};
+const SUPA = 'https://你的项目.supabase.co';
+const KEY = '你的anon-key';
+```
+
+### 3. 部署
+
+部署到任意静态文件服务器即可，只有一个 HTML 文件：
+
+```bash
+# 方式一：Python 快速启动
+pip install fastapi uvicorn
+python serve.py
+
+# 方式二：直接用 nginx / Cloudflare Pages / Vercel / GitHub Pages
+# 只需托管 index.html 即可
+```
 
 ## 🛠️ 技术栈
 
-- 前端：单HTML文件，原生JS，Zpix中文像素字体
-- 后端：Supabase (PostgreSQL + REST API)
-- 部署：FastAPI 静态文件服务 + Cloudflare Tunnel
-- 风格：萌系像素风 🫧
-
-## 📦 部署
-
-1. 在 [Supabase](https://supabase.com) 创建项目
-2. 执行 `schema.sql` 创建数据库表
-3. 将 `index.html` 中的 Supabase URL 和 anon key 替换为你自己的
-4. 部署到任意静态文件服务器
-
-```bash
-# 使用 FastAPI 部署
-pip install fastapi uvicorn
-python serve.py
-```
+- **前端**：单HTML文件，原生JS，零依赖
+- **字体**：Zpix 中文像素字体
+- **后端**：Supabase（PostgreSQL + REST API）
+- **风格**：萌系像素风 🫧
 
 ## 📋 数据库结构
 
-- `users` — 用户表（昵称登录）
-- `checkins` — 打卡记录（早起/晚睡/💩）
-- `foods` — 食物库（名称+标签）
-- `raid_sessions` — 副本场次
-- `raid_signups` — 副本报名
+| 表名 | 用途 |
+|------|------|
+| `users` | 用户（昵称登录） |
+| `checkins` | 打卡记录（早起/晚睡/💩） |
+| `foods` | 食物库（名称+标签数组） |
+| `raid_sessions` | 副本场次 |
+| `raid_signups` | 副本报名 |
 
-## 🎮 关于
+## 🎮 适用场景
 
-为燕云十六声游戏「透明」百业打造的社团工具。60人规模，萌系像素风。
+- 游戏公会/百业/帮派的社团管理
+- 小型社群的打卡互动工具
+- 任何需要简单报名系统的团队
+
+## 📝 License
+
+MIT
 
 ---
 
-*Built with 🩵 by YECI*
+*Built with 🩵 by [YECI](https://github.com/fedeligbad)*

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>透明百业</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫧</text></svg>">
+<title>百业工坊</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 <style>
   @font-face{font-family:'Zpix';src:url('https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@master/dist/Zpix.woff2') format('woff2');font-display:swap}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -61,8 +61,17 @@ function setTheme(t){
 }
 (function(){var t=localStorage.getItem('ts_theme');if(t)setTheme(t)})();
 
-const SUPA='https://egofocgewwjzlbuzagkr.supabase.co';
-const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVnb2ZvY2dld3dqemxidXphZ2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNzUyMDQsImV4cCI6MjA5Mjk1MTIwNH0.Itv47onf9AafGRTWwLYLspPQxPJr-_3UxjfWRyOroNE';
+// ========== 配置区域 ==========
+// 修改以下内容来定制你的百业工坊
+const CONFIG = {
+  name: '你的百业名',          // 百业/社团名称
+  subtitle: 'YOUR STUDIO',   // 英文副标题
+  icon: '🫧',                // 标签页图标
+  adminPassword: '123456',   // 管理员密码（用于创建副本场次和指挥报名）
+};
+const SUPA = 'https://你的项目.supabase.co';        // 替换为你的 Supabase URL
+const KEY = '你的anon-key';                          // 替换为你的 Supabase anon key
+// ==============================
 const H={'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY};
 async function api(p,o={}){const r=await fetch(SUPA+'/rest/v1/'+p,{headers:{...H,...(o.headers||{})},...o});if(!r.ok)throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null}
 let U=JSON.parse(localStorage.getItem('ts_user')||'null');
@@ -81,7 +90,7 @@ function loginHTML(){
   return '<div class="bg-main" style="display:flex;align-items:center;justify-content:center;padding:20px">'+
     '<div class="card slide-up" style="max-width:340px;width:100%;text-align:center;padding:32px 24px;border-color:var(--accent-light)">'+
       '<div style="font-size:28px;margin-bottom:6px">🫧</div>'+
-      '<h1 style="font-size:22px;color:var(--accent-dark);margin-bottom:4px">透明百业</h1>'+
+      '<h1 style="font-size:22px;color:var(--accent-dark);margin-bottom:4px">'+CONFIG.name+'</h1>'+
       '<div style="font-size:12px;color:var(--text-light);margin-bottom:24px;letter-spacing:3px">TRANSPARENT STUDIO</div>'+
       '<input id="ni" placeholder="◇ 输入昵称 ◇" maxlength="20" onkeydown="if(event.key===\'Enter\')doLogin()">'+
       '<div style="margin-top:20px"><button class="btn btn-accent" onclick="doLogin()">❀ 进入主页 ❀</button></div>'+
@@ -108,7 +117,7 @@ function menuHTML(){
   ];
   return '<div class="bg-main"><div class="container slide-up">'+
     '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-top:10px">'+
-      '<div><div style="font-size:16px;color:var(--accent-dark)">透明百业 ✿</div>'+
+      '<div><div style="font-size:16px;color:var(--accent-dark)">'+CONFIG.name+' ✿</div>'+
       '<div style="font-size:14px;color:var(--text-light);margin-top:4px">欢迎~ <span style="color:var(--accent)">'+U.nickname+'</span> ♡</div></div>'+
       '<button class="btn btn-purple btn-small" onclick="doLogout()">登出</button></div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
@@ -370,7 +379,7 @@ async function addFood(){
 
 
 // ===== RAID SIGNUP =====
-var RAID_PWD='123456';
+var RAID_PWD=CONFIG.adminPassword;
 var raidSessions=[];
 
 function raidHTML(){
