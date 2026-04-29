@@ -1,8 +1,21 @@
 # 🫧 百业工坊 · Guild Studio
 
-给你的游戏社团搭一个专属 Web App — 一键部署，开箱即用。
-
 > 为游戏社团打造的开源管理工具，开箱即用。
+
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Stack](https://img.shields.io/badge/stack-HTML%20%2B%20Supabase-orange)
+
+## 📸 预览
+
+| 登录 | 主页 | 打卡 |
+|:---:|:---:|:---:|
+| 昵称登录，自动注册 | 四大功能模块 | 日历视图 + 排行榜 |
+
+| 食物扭蛋机 | 双十报名 | 四主题 |
+|:---:|:---:|:---:|
+| 167+ 食物 tag 筛选 | 指挥位 + 9 人报名 | 🌸🎋🌅🌙 |
+
+> 📱 移动端优先设计，桌面端同样适配
 
 ## ✨ 功能
 
@@ -35,25 +48,24 @@ const KEY = '你的anon-key';
 
 ### 3. 部署
 
-部署到任意静态文件服务器即可，只有一个 HTML 文件：
-
 ```bash
-# 方式一：Python 快速启动
+# 方式一：Python
 pip install fastapi uvicorn
 python serve.py
 
-# 方式二：直接用 nginx / Cloudflare Pages / Vercel / GitHub Pages
+# 方式二：任意静态服务器
 # 只需托管 index.html 即可
+# 支持 Nginx / Cloudflare Pages / Vercel / GitHub Pages
 ```
 
 ## 🛠️ 技术栈
 
 - **前端**：单HTML文件，原生JS，零依赖
-- **字体**：Zpix 中文像素字体
-- **后端**：Supabase（PostgreSQL + REST API）
+- **字体**：[Zpix](https://github.com/SolidZORO/zpix-pixel-font) 中文像素字体
+- **后端**：[Supabase](https://supabase.com)（PostgreSQL + REST API）
 - **风格**：萌系像素风 🫧
 
-## 📋 数据库结构
+## 📋 数据库
 
 | 表名 | 用途 |
 |------|------|
@@ -63,6 +75,8 @@ python serve.py
 | `raid_sessions` | 副本场次 |
 | `raid_signups` | 副本报名 |
 
+详见 [`schema.sql`](schema.sql)
+
 ## 🎮 适用场景
 
 - 游戏公会、百业、帮派等社团管理
@@ -71,7 +85,7 @@ python serve.py
 
 ## 📝 License
 
-MIT
+[MIT](LICENSE)
 
 ---
 
